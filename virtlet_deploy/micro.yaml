@@ -1,0 +1,257 @@
+######################################################## keyvaluestore
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: micro-keyvaluestore
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: micro-keyvaluestore
+      labels:
+        case: micro-keyvaluestore
+      annotations:
+        kubernetes.io/target-runtime: virtlet
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "nodeAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": {
+                "nodeSelectorTerms": [
+                  {
+                    "matchExpressions": [
+                      {
+                        "key": "extraRuntime",
+                        "operator": "In",
+                        "values": ["virtlet"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+    spec:
+      containers:
+        - name: micro-keyvaluestore
+          image: virtlet/image-service.kube-system/micro-keyvaluestore.qemu
+          ports:
+          - name: app-port
+            containerPort: 9000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-keyvaluestore
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    case: micro-keyvaluestore
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: app-port
+---
+######################################################## master
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: micro-master
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: micro-master
+      labels:
+        case: micro-master
+      annotations:
+        kubernetes.io/target-runtime: virtlet
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "nodeAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": {
+                "nodeSelectorTerms": [
+                  {
+                    "matchExpressions": [
+                      {
+                        "key": "extraRuntime",
+                        "operator": "In",
+                        "values": ["virtlet"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+    spec:
+      containers:
+        - name: micro-master
+          image: virtlet/image-service.kube-system/micro-master.qemu
+          ports:
+          - name: app-port
+            containerPort: 9003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-master
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    case: micro-master
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: app-port
+--- 
+######################################################## db
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: micro-db
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: micro-db
+      labels:
+        case: micro-db
+      annotations:
+        kubernetes.io/target-runtime: virtlet
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "nodeAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": {
+                "nodeSelectorTerms": [
+                  {
+                    "matchExpressions": [
+                      {
+                        "key": "extraRuntime",
+                        "operator": "In",
+                        "values": ["virtlet"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+    spec:
+      containers:
+        - name: micro-db
+          image: virtlet/image-service.kube-system/micro-db.qemu
+          ports:
+          - name: app-port
+            containerPort: 9001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-db
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    case: micro-db
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: app-port
+--- 
+######################################################## storage
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: micro-storage
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: micro-storage
+      labels:
+        case: micro-storage
+      annotations:
+        kubernetes.io/target-runtime: virtlet
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "nodeAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": {
+                "nodeSelectorTerms": [
+                  {
+                    "matchExpressions": [
+                      {
+                        "key": "extraRuntime",
+                        "operator": "In",
+                        "values": ["virtlet"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+    spec:
+      containers:
+        - name: micro-storage
+          image: virtlet/image-service.kube-system/micro-storage.qemu
+          ports:
+          - name: app-port
+            containerPort: 9002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micro-storage
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    case: micro-storage
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: app-port
+---
+######################################################## worker
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: micro-worker
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: micro-worker
+      labels:
+        case: micro-worker
+      annotations:
+        kubernetes.io/target-runtime: virtlet
+        scheduler.alpha.kubernetes.io/affinity: >
+          {
+            "nodeAffinity": {
+              "requiredDuringSchedulingIgnoredDuringExecution": {
+                "nodeSelectorTerms": [
+                  {
+                    "matchExpressions": [
+                      {
+                        "key": "extraRuntime",
+                        "operator": "In",
+                        "values": ["virtlet"]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+    spec:
+      containers:
+        - name: micro-worker
+          image: virtlet/image-service.kube-system/micro-worker.qemu
