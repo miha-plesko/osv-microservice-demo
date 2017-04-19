@@ -1,0 +1,35 @@
+#
+# In this file we specify how each microservice should boot.
+#
+
+runtime: native
+
+config_set: 
+   keyvaluestore:
+      bootcmd: /node keyvaluestore.js
+      env:
+         PORT: 9000
+         MICRO_MASTER_ENDPOINT: micro-master.default.svc.cluster.local
+         MICRO_DB_ENDPOINT: micro-db.default.svc.cluster.local
+         MICRO_STORAGE_ENDPOINT: micro-storage.default.svc.cluster.local
+   db:
+      bootcmd: /node db.js
+      env:
+         PORT: 9001
+         MICRO_KEYVALUESTORE_ENDPOINT: micro-keyvaluestore.default.svc.cluster.local
+   storage:
+      bootcmd: /node storage.js
+      env:
+         PORT: 9002
+         MICRO_KEYVALUESTORE_ENDPOINT: micro-keyvaluestore.default.svc.cluster.local
+   master:
+      bootcmd: /node master.js
+      env:
+         PORT: 9003
+         MICRO_KEYVALUESTORE_ENDPOINT: micro-keyvaluestore.default.svc.cluster.local
+   worker:
+      bootcmd: /node worker.js
+      env:
+         MICRO_KEYVALUESTORE_ENDPOINT: micro-keyvaluestore.default.svc.cluster.local
+
+config_set_default: keyvaluestore
